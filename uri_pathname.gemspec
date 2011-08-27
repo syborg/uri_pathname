@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{uri_pathname}
-  s.version = "0.0.0.pre0"
+  s.version = "0.0.0.pre1"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Marcel Massana"]
-  s.date = %q{2011-08-26}
+  s.date = %q{2011-08-28}
   s.description = %q{Simple converter between URIs and Pathnames. It creates valid, unique and readable filenames from URIs and viceversa. It can be used to name files while saving data from websites and conversely, read files assigned to URIs while, for instance, simulating or stubbing web accesses by neabs of reading files}
   s.email = %q{xaxaupua@gmail.com}
   s.extra_rdoc_files = [
@@ -23,7 +23,6 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "lib/uri_pathname.rb",
-     "lib/uri_pathname/pathname.rb",
      "lib/uri_pathname/version.rb",
      "test/helper.rb",
      "test/test_uri_pathname.rb",
@@ -36,7 +35,9 @@ Gem::Specification.new do |s|
   s.summary = %q{Simple converter between URIs and Pathnames}
   s.test_files = [
     "test/helper.rb",
-     "test/test_uri_pathname.rb"
+     "test/test_uri_pathname.rb",
+     "examples/simple_examples.rb",
+     "examples/using_fakeweb.rb"
   ]
 
   if s.respond_to? :specification_version then
