@@ -14,7 +14,7 @@ class UriPathname
   # pathname and viceversa. To work it should be a String that
   # doesn't exist in URIs and that can be used in pathnames.
 
-  HOST_SEP = '__|' # used to separate hostname from the
+  HOST_SEP = '__|' # used to separate hostname from the path
 
   NO_PTH = '_NOPATH_' # used to make a filename for root uris (empty path).
   # To work it should be a String that doesn't exist in uris
