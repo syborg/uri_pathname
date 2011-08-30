@@ -11,13 +11,13 @@ begin
       It creates valid, unique and readable filenames from URIs and 
       viceversa. It can be used to name files while saving data from 
       websites and conversely, read files assigned to URIs while, for
-      instance, simulating or stubbing web accesses by neabs of reading
+      instance, simulating or stubbing web accesses by means of reading
       files}.gsub(/\s+/,' ')
     gem.email = "xaxaupua@gmail.com"
     gem.homepage = "http://github.com/syborg/uri_pathname"
     gem.authors = ["Marcel Massana"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
-    gem.version = Version::STRING
+    # gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.version = UriPathname::Version::STRING
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

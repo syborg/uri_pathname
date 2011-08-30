@@ -3,14 +3,9 @@
 UriPathname eases the conversions between URIs and unique valid pathnames. This
 feature might be useful, for instance, when:
 
-* Web Spidering: You want to save webpages to files, or save all their contents
-within a directory, or only some scraped data, ... and don't know how to name
-them. UriPathname can assign easily unique valide names to files or directories
-from already known URIs, combinig scheme, hostname, path and vars.
+* Web Spidering: You want to save webpages to files, or save all their contents within a directory, or only some scraped data, ... and don't know how to name them. UriPathname can assign easily unique valide names to files or directories from already known URIs, combinig scheme, hostname, path and vars.
 
-* Web Stubbing / Testing: You need to retrieve previously saved webpages by
-means of their URIs. UriPathname guesses the pathname from a given URI, then you
-can use, for instance, your File.read to read that file/page.
+* Web Stubbing / Testing: You need to retrieve previously saved webpages by means of their URIs. UriPathname guesses the pathname from a given URI, then you can use, for instance, your File.read to read that file/page.
 
 == Installation
 
@@ -34,25 +29,25 @@ Require at least ...
 Theses examples are useful when web spidering. You will need to generate a
 pathname given an URI.
 
-  # From URI containing path and query
-  puts UriPathname::uri_to_pathname("http://www.fake.fak/path1/path2?query")
+  # From URI with path and query
+  puts up.uri_to_pathname("http://www.fake.fak/path1/path2?query")
   # => www.fake.fak__|path1_|_path2?query(http)
 
   # From URI without path and query
-  puts UriPathname::uri_to_pathname("http://www.fake.fak")
+  puts up.uri_to_pathname("http://www.fake.fak")
   # => www.fake.fak__|_NOPATH_(http)
 
   # Fragments or other URI parts are silently ignored
-  puts UriPathname::uri_to_pathname('http://donaldfagen.com/disc_nightfly.php#rubybaby')
+  puts up.uri_to_pathname('http://donaldfagen.com/disc_nightfly.php#rubybaby')
   # => donaldfagen.com__|disc_nightfly.php(http)
 
   # If a directory is given as a second arg, pathname will be prepended with that
   # expanded directory
-  puts UriPathname::uri_to_pathname("http://www.fake.fak", "~/my_webdumps")
+  puts up.uri_to_pathname("http://www.fake.fak", "~/my_webdumps")
   # => /home/marcel/my_webdumps/www.fake.fak__|_NOPATH_(http)
 
   # Also a third argument can be given and will be appended as an extension
-  puts UriPathname::uri_to_pathname("http://www.fake.fak/path","", ".html")
+  puts up.uri_to_pathname("http://www.fake.fak/path","", ".html")
   # => www.fake.fak__|path(http).html
 
 === Recovering URIs from (correct) pathnames
@@ -60,13 +55,13 @@ pathname given an URI.
 When stubbing with tools like fakeweb, you can use reverse conversion to
 register fake accesses to real URIs.
 
-  # pathnames can be parsed if correctly built as above examples (see docs)
-  p UriPathname::parse('/home/marcel/my_webdumps/www.fake.fak__|path1_|_path2?query(http).html.gz')
+  # pathnames can be parsed if correctly generated as above examples (see docs)
+  p up.parse('/home/marcel/my_webdumps/www.fake.fak__|path1_|_path2?query(http).html.gz')
 
   # URI can be also retrieved from correct (Uri)pathnames
-  puts UriPathname::pathname_to_uri('/home/marcel/my_webdumps/www.fake.fak__|_NOPATH_(http).html.gz')
+  puts up.pathname_to_uri('/home/marcel/my_webdumps/www.fake.fak__|_NOPATH_(http).html.gz')
   # => http://www.fake.fak
-  puts UriPathname::pathname_to_uri('www.fake.fak__|path?query(http).html.gz')
+  puts up.pathname_to_uri('www.fake.fak__|path?query(http).html.gz')
   # => http://www.fake.fak/path?query
 
 === Web Spidering / Dumping / Stubbing
@@ -74,87 +69,80 @@ register fake accesses to real URIs.
 This example shows how tu use UriPathname to assign names to files and also
 registering those files to stubb real accesses later.
 
-  require 'rubygems'
-  require 'fileutils'
-  require 'open-uri'
-  require 'uri_pathname'
-  require 'fakeweb' # gem install fakeweb
+require 'rubygems'
+require 'fileutils'
+require 'open-uri'
+require 'uri_pathname'
+require 'fakeweb' # gem install fakeweb
 
-  # put here whatever temporary directory name to use
-  MY_DIR=File.expand_path '~/my_dumps'
-  # put here whatever URIs u want to access
-  MY_URIS = [
-    'http://en.wikipedia.org/wiki/Ruby_Bridges',
-    'http://donaldfagen.com/disc_nightfly.php',
-    'http://www.rubi.cat/ajrubi/portada/index.php',
-    'http://www.google.com/cse?q=array&cx=013598269713424429640%3Ag5orptiw95w&ie=UTF-8&sa=Search'
-  ]
+# put here whatever temporary directory name to use
+MY_DIR=File.expand_path '~/my_dumps'
+# put here whatever URIs u want to access
+MY_URIS = [
+  'http://en.wikipedia.org/wiki/Ruby_Bridges',
+  'http://donaldfagen.com/disc_nightfly.php',
+  'http://www.rubi.cat/ajrubi/portada/index.php',
+  'http://www.google.com/cse?q=array&cx=013598269713424429640%3Ag5orptiw95w&ie=UTF-8&sa=Search'
+]
 
-  # convenient def
-  def prepare_example
-    File.makedirs(MY_DIR) unless (File.exist?(MY_DIR) and File.directory?(MY_DIR))
-  end
+# some convenient defs
+def prepare_example
+  File.makedirs(MY_DIR) unless (File.exist?(MY_DIR) and File.directory?(MY_DIR))
+end
 
-  # preparation (comment this if you've already got your test dir)
-  prepare_example
+# preparation (comment this if you've already got your test dir)
+prepare_example
 
-  # 1st round: Capture MY_URIS, and save them with appropiate UriPathname
-  puts "1- Capturing URIs"
-  data = nil
-  sizes = []
-  MY_URIS.each do |uri|
-    open uri do |u|
-      data=u.read
-      pathname = UriPathname::uri_to_pathname(uri,MY_DIR,".html")
-      File.open(pathname,'w') do |f|
-        f.write data
-        sizes << data.size
-        puts "SAVED #{uri} : #{data.size} bytes"
-      end
+up = UriPathname.new
+
+# 1st round: Capture MY_URIS, and save them with appropiate UriPathname
+puts "1- Capturing URIs"
+data = nil
+sizes = []
+MY_URIS.each do |uri|
+  open uri do |u|
+    data=u.read
+    pathname = up.uri_to_pathname(uri,MY_DIR,".html")
+    File.open(pathname,'w') do |f|
+      f.write data
+      sizes << data.size
+      puts "SAVED #{uri} : #{data.size} bytes"
     end
   end
+end
 
-  # 2nd round: checking saved files and preparing
-  puts "\n2- CHECKING CAPTURED FILES AND PREPARING FAKE WEB ACCESSES"
-  FakeWeb.allow_net_connect=false
-  Dir[File.join(MY_DIR,"*")].each do |name|
-    uri = UriPathname::pathname_to_uri name
-    FakeWeb.register_uri :any, uri, :body=>name, :content_type=>"text/html"
-    puts "#{name}\n\tcorresponds to #{uri}"
-  end
+# 2nd round: checking saved files and preparing
+puts "\n2- CHECKING CAPTURED FILES AND PREPARING FAKE WEB ACCESSES"
+FakeWeb.allow_net_connect=false
+Dir[File.join(MY_DIR,"*")].each do |name|
+  uri = up.pathname_to_uri name
+  FakeWeb.register_uri :any, uri, :body=>name, :content_type=>"text/html"
+  puts "#{name}\n\tcorresponds to #{uri}"
+end
 
-  # 3nd round: Access Web without actually accessing web
-  puts "\n3- FAKE WEB ACCESSES"
-  MY_URIS.each_with_index do |uri,i|
-    open uri do |u|
-      data=u.read
-      puts "FAKE #{uri} ACCESS #{(data.size == sizes[i]) ? 'OK' : 'KO'}: #{data.size} bytes"
-    end
+# 3nd round: Access Web without actually accessing web
+puts "\n3- FAKE WEB ACCESSES"
+MY_URIS.each_with_index do |uri,i|
+  open uri do |u|
+    data=u.read
+    puts "FAKE #{uri} ACCESS #{(data.size == sizes[i]) ? 'OK' : 'KO'}: #{data.size} bytes"
   end
+end
 
 == Release Notes
 
-* At present, UriPathname uses only some parts of an URI (scheme, hostname, path
-and query) to generate a valid and unique pathname that can be backconverted to
-URI. Port, User and other URI features are not yet used. I haven't had the
-necessity to include them too ;-).
+* At present, UriPathname uses only some parts of an URI (scheme, hostname, path and query) to generate a valid and unique pathname that can be backconverted to URI. Port, User and other URI features are not yet used. I haven't had the necessity to include them too ;-).
 
-* Only Linux pathnames have been taken into account. I don't know if UriPathname
-will generate correct Windows or OSX pathnames, for instance. Test it and feel
-free to collaborate.
+* Only Linux pathnames have been taken into account. I don't know if UriPathname will generate correct Windows or OSX pathnames, for instance. Test it and feel free to collaborate.
 
-* This is a very early release. I haven't got the time to study and prepare
-tests, nonetheless, some examples will become tests in the future
+* This is a very early release. I haven't got the time to study and prepare tests, nonetheless, some examples will become tests in the future
 
 == Note on Patches/Pull Requests
 
-* This project is open to collaborators.
 * Fork the project.
 * Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Add tests for it. This is important so I don't break it in a future version unintentionally.
+* Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
 == Copyright

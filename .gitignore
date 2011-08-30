@@ -19,6 +19,7 @@ rdoc
 pkg
 
 ## PROJECT::SPECIFIC
+*.gem
 examples/pr_*
 
 ## NETBEANS

@@ -29,6 +29,8 @@ end
 # preparation (comment this if you've already got your test dir)
 prepare_example
 
+up = UriPathname.new
+
 # 1st round: Capture MY_URIS, and save them with appropiate UriPathname
 puts "1- Capturing URIs"
 data = nil
@@ -36,7 +38,7 @@ sizes = []
 MY_URIS.each do |uri|
   open uri do |u|
     data=u.read
-    pathname = UriPathname::uri_to_pathname(uri,MY_DIR,".html")
+    pathname = up.uri_to_pathname(uri,MY_DIR,".html")
     File.open(pathname,'w') do |f|
       f.write data
       sizes << data.size
@@ -49,7 +51,7 @@ end
 puts "\n2- CHECKING CAPTURED FILES AND PREPARING FAKE WEB ACCESSES"
 FakeWeb.allow_net_connect=false
 Dir[File.join(MY_DIR,"*")].each do |name|
-  uri = UriPathname::pathname_to_uri name
+  uri = up.pathname_to_uri name
   FakeWeb.register_uri :any, uri, :body=>name, :content_type=>"text/html"
   puts "#{name}\n\tcorresponds to #{uri}"
 end
