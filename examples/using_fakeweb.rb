@@ -47,7 +47,7 @@ MY_URIS.each do |uri|
   end
 end
 
-# 2nd round: checking saved files and preparing
+# 2nd round: checking saved files and preparing fake web accesses
 puts "\n2- CHECKING CAPTURED FILES AND PREPARING FAKE WEB ACCESSES"
 FakeWeb.allow_net_connect=false
 Dir[File.join(MY_DIR,"*")].each do |name|
