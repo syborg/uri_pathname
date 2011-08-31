@@ -20,8 +20,6 @@ class UriPathname
   # To work it should be a String that doesn't exist in uris
 
   BASE_DIR = '' # dir prepended to all pathnames
-  
-  HOST_2_DIR = true # URI hostname will become a subdirectory?
 
   #default attributes
   DEFAULT_ATTRS = {
@@ -29,7 +27,6 @@ class UriPathname
       :host_sep => HOST_SEP,
       :no_pth => NO_PTH,
       :base_dir => BASE_DIR,
-      :host_2_dir => HOST_2_DIR
     }
 
   attr_accessor *(DEFAULT_ATTRS.keys)
@@ -40,7 +37,6 @@ class UriPathname
   #      :host_sep => String that will be used to substitute '/' between host and path (default UriPathname::HOST_SEP)
   #      :no_pth => String that will be used as a path placeholder when no URI's path exists, (default UriPathname::NO_PTH)
   #      :base_dir => String containing base directory prepended to any pathname, (default UriPathname::DEFAULT_DIR)
-  #      :host_2_dir => If true, hostnames will become subdirectories (default UriPathname::HOST_2_DIR)
   def initialize(options = {})
 
     attributes = DEFAULT_ATTRS.merge options if options.is_a? Hash
