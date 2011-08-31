@@ -23,7 +23,7 @@ MY_URIS = [
 
 # some convenient defs
 def prepare_example
-  File.makedirs(MY_DIR) unless (File.exist?(MY_DIR) and File.directory?(MY_DIR))
+  FileUtils.mkdir_p(MY_DIR) unless (File.exist?(MY_DIR) and File.directory?(MY_DIR))
 end
 
 # preparation (comment this if you've already got your test dir)

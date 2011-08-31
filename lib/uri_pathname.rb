@@ -74,6 +74,7 @@ class UriPathname
     else
       ""
     end
+    extension='' unless extension
     extension.insert(0,'.') unless extension.empty? or extension.start_with? '.'
     pathname = host << @host_sep << path << query << scheme << extension
     basedirpath = @base_dir unless basedirpath
