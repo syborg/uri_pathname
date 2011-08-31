@@ -4,6 +4,10 @@
 require 'uri'
 require 'uri_pathname/version'
 
+# TODO cope with the possibility of '' :host_sep and/or :path_sep to accomodate to convenient defaults
+# TODO look what todo when possible parse conflicts between  :host_sep, :path_sep,
+# TODO build wrapper methods arround resulting array from parse method
+# TODO include annother array result with the comprete_pathname (already expanded)
 class UriPathname
 
   # Error codes
